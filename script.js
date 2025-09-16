@@ -11,7 +11,7 @@ const tabs = document.querySelectorAll('.operations__tab');
 const tabsContainer = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
 
-///////////////////////////////////////
+///////////////////////////////////////////////////////////////
 // Modal window
 
 const openModal = function () {
@@ -36,12 +36,13 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
+///////////////////////////////////////////////////////////////
 // Smooth scrolling to section 1
 btnScrollTo.addEventListener('click', function (e) {
   section1.scrollIntoView({ behavior: 'smooth' });
 });
 
-///////////////////////////////////////
+///////////////////////////////////////////////////////////////
 // Page navigation
 
 document.querySelector('.nav__links').addEventListener('click', function (e) {
@@ -49,13 +50,12 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 
   if (e.target.classList.contains('nav__link')) {
     const id = e.target.getAttribute('href');
-    console.log(id);
     document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
   }
 });
 
+///////////////////////////////////////////////////////////////
 // Building the tabed component
-
 tabsContainer.addEventListener('click', function (e) {
   const clicked = e.target.closest('.operations__tab');
 
@@ -75,6 +75,7 @@ tabsContainer.addEventListener('click', function (e) {
     .classList.add('operations__content--active');
 });
 
+///////////////////////////////////////////////////////////////
 // Menu fade animation
 const handleHover = function (e) {
   if (e.target.classList.contains('nav__link')) {
@@ -89,6 +90,7 @@ const handleHover = function (e) {
   }
 };
 
+///////////////////////////////////////////////////////////////
 // Pasing a function to a handler
 nav.addEventListener('mouseover', handleHover.bind(0.5));
 nav.addEventListener('mouseout', handleHover.bind(1));
@@ -117,6 +119,7 @@ const headerObserver = new IntersectionObserver(stickyNav, {
 });
 headerObserver.observe(header);
 
+///////////////////////////////////////////////////////////////
 // Reveal sections
 const allSections = document.querySelectorAll('.section');
 
@@ -138,3 +141,30 @@ allSections.forEach(function (section) {
   sectionObserver.observe(section);
   section.classList.add('section--hidden');
 });
+
+///////////////////////////////////////////////////////////////
+// Lazy Loading Images
+const imgTagets = document.querySelectorAll('img[data-src]');
+
+const loadImg = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+
+  if (!entry.isIntersecting) return;
+
+  // Replace src with data-src
+  entry.target.src = entry.target.dataset.src;
+
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
+
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  root: null,
+  threshold: 0,
+});
+
+imgTagets.forEach(img => imgObserver.observe(img));
